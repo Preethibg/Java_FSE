@@ -64,3 +64,23 @@ public class Main {
         return futureValue;
     }
 }
+
+
+OUTPUT:
+
+--- Financial Forecasting Tool ---
+
+Calculating Future Value Recursively:
+Initial Investment: 1000.0
+Annual Growth Rate: 5.0%
+Number of Periods: 10
+Future Value (Recursive): 1628.89
+Time taken (Recursive): 49910 ns
+
+Calculating Future Value Iteratively (Optimized):
+Future Value (Iterative): 1628.89
+Time taken (Iterative): 5470 ns
+
+--- Forecasting Complete ---
+
+=== Code Execution Successful ===
