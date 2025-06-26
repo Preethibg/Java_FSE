@@ -1,0 +1,266 @@
+Scenario 1:The bank wants to apply a discount to loan interest rates for customers above 60 years old.
+Question: Write a PL/SQL block that loops through all customers, checks their age, and if they are above 60, apply a 1% discount to their current loan interest rates.
+
+
+-- Scenario 1: The bank wants to apply a discount to loan interest rates for customers above 60 years old.
+-- This block demonstrates checking age and applying a discount for a few individual customer/loan examples.
+
+-- To enable output in some online PL/SQL compilers, you might need to add:
+-- SET SERVEROUTPUT ON;
+
+DECLARE
+    -- --- Example 1: Eligible Customer (Alice Smith) ---
+    v_cust1_name          VARCHAR2(100) := 'Alice Smith';
+    v_cust1_age           NUMBER        := 65;
+    v_cust1_loan_rate_1   NUMBER(5, 2)  := 5.50;
+    v_cust1_loan_rate_2   NUMBER(5, 2)  := 5.00;
+    v_cust1_original_rate NUMBER(5, 2);
+
+    -- --- Example 2: Non-Eligible Customer (Bob Johnson) ---
+    v_cust2_name          VARCHAR2(100) := 'Bob Johnson';
+    v_cust2_age           NUMBER        := 55;
+    v_cust2_loan_rate_1   NUMBER(5, 2)  := 4.80;
+    v_cust2_original_rate NUMBER(5, 2);
+
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('--- Scenario 1: Loan Interest Rate Discount ---');
+    DBMS_OUTPUT.PUT_LINE('---------------------------------------------');
+
+    -- Processing Example 1: Alice Smith
+    DBMS_OUTPUT.PUT_LINE('Processing Customer: ' || v_cust1_name || ', Age: ' || v_cust1_age);
+    IF v_cust1_age > 60 THEN
+        DBMS_OUTPUT.PUT_LINE('  ' || v_cust1_name || ' is above 60. Applying 1% discount to loans.');
+
+        -- Loan 1 for Alice
+        v_cust1_original_rate := v_cust1_loan_rate_1;
+        v_cust1_loan_rate_1 := v_cust1_loan_rate_1 - 1.00;
+        DBMS_OUTPUT.PUT_LINE('    Loan 1 - Original Rate: ' || v_cust1_original_rate || '%, New Rate: ' || v_cust1_loan_rate_1 || '%');
+
+        -- Loan 2 for Alice
+        v_cust1_original_rate := v_cust1_loan_rate_2;
+        v_cust1_loan_rate_2 := v_cust1_loan_rate_2 - 1.00;
+        DBMS_OUTPUT.PUT_LINE('    Loan 2 - Original Rate: ' || v_cust1_original_rate || '%, New Rate: ' || v_cust1_loan_rate_2 || '%');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('  ' || v_cust1_name || ' is 60 or younger. No discount applied.');
+    END IF;
+
+    DBMS_OUTPUT.PUT_LINE(CHR(10)); -- New line for separation
+
+    -- Processing Example 2: Bob Johnson
+    DBMS_OUTPUT.PUT_LINE('Processing Customer: ' || v_cust2_name || ', Age: ' || v_cust2_age);
+    IF v_cust2_age > 60 THEN
+        DBMS_OUTPUT.PUT_LINE('  ' || v_cust2_name || ' is above 60. Applying 1% discount to loans.');
+        v_cust2_original_rate := v_cust2_loan_rate_1;
+        v_cust2_loan_rate_1 := v_cust2_loan_rate_1 - 1.00;
+        DBMS_OUTPUT.PUT_LINE('    Loan 1 - Original Rate: ' || v_cust2_original_rate || '%, New Rate: ' || v_cust2_loan_rate_1 || '%');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('  ' || v_cust2_name || ' is 60 or younger. No discount applied.');
+    END IF;
+
+    DBMS_OUTPUT.PUT_LINE('---------------------------------------------');
+
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An error occurred in Scenario 1: ' || SQLERRM);
+END;
+/
+
+
+Output:
+
+--- Scenario 1: Loan Interest Rate Discount ---
+---------------------------------------------
+Processing Customer: Alice Smith, Age: 65
+Alice Smith is above 60. Applying 1% discount to loans.
+Loan 1 - Original Rate: 5.5%, New Rate: 4.5%
+Loan 2 - Original Rate: 5%, New Rate: 4%
+
+
+Processing Customer: Bob Johnson, Age: 55
+Bob Johnson is 60 or younger. No discount applied.
+---------------------------------------------
+
+
+Scenario 2:Scenario 2: A customer can be promoted to VIP status based on their balance.
+Question: Write a PL/SQL block that iterates through all customers and sets a flag IsVIP to TRUE for those with a balance over $10,000.
+
+
+-- Scenario 2: A customer can be promoted to VIP status based on their balance.
+-- This block iterates through a few customer examples and sets a flag IsVIP.
+
+-- To enable output in some online PL/SQL compilers, you might need to add:
+-- SET SERVEROUTPUT ON;
+
+DECLARE
+    -- --- Example 1: VIP Customer (David Lee) ---
+    v_cust1_name      VARCHAR2(100) := 'David Lee';
+    v_cust1_balance   NUMBER(10, 2) := 12500.00;
+    v_cust1_is_vip    BOOLEAN       := FALSE;
+
+    -- --- Example 2: Regular Customer (Eve Adams) ---
+    v_cust2_name      VARCHAR2(100) := 'Eve Adams';
+    v_cust2_balance   NUMBER(10, 2) := 8000.00;
+    v_cust2_is_vip    BOOLEAN       := FALSE;
+
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('--- Scenario 2: VIP Status Promotion ---');
+    DBMS_OUTPUT.PUT_LINE('--------------------------------------');
+
+    -- Processing Example 1: David Lee
+    DBMS_OUTPUT.PUT_LINE('Checking Customer: ' || v_cust1_name || ', Balance: $' || v_cust1_balance);
+    IF v_cust1_balance > 10000 THEN
+        v_cust1_is_vip := TRUE;
+        DBMS_OUTPUT.PUT_LINE('  ' || v_cust1_name || ' has balance over $10,000. Promoted to VIP!');
+    ELSE
+        v_cust1_is_vip := FALSE;
+        DBMS_OUTPUT.PUT_LINE('  ' || v_cust1_name || ' has balance $10,000 or less. Remains regular.');
+    END IF;
+    DBMS_OUTPUT.PUT_LINE('  Final VIP Status for ' || v_cust1_name || ': ' || CASE WHEN v_cust1_is_vip THEN 'TRUE' ELSE 'FALSE' END);
+
+    DBMS_OUTPUT.PUT_LINE(CHR(10)); -- New line for separation
+
+    -- Processing Example 2: Eve Adams
+    DBMS_OUTPUT.PUT_LINE('Checking Customer: ' || v_cust2_name || ', Balance: $' || v_cust2_balance);
+    IF v_cust2_balance > 10000 THEN
+        v_cust2_is_vip := TRUE;
+        DBMS_OUTPUT.PUT_LINE('  ' || v_cust2_name || ' has balance over $10,000. Promoted to VIP!');
+    ELSE
+        v_cust2_is_vip := FALSE;
+        DBMS_OUTPUT.PUT_LINE('  ' || v_cust2_name || ' has balance $10,000 or less. Remains regular.');
+    END IF;
+    DBMS_OUTPUT.PUT_LINE('  Final VIP Status for ' || v_cust2_name || ': ' || CASE WHEN v_cust2_is_vip THEN 'TRUE' ELSE 'FALSE' END);
+
+    DBMS_OUTPUT.PUT_LINE('--------------------------------------');
+
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An error occurred in Scenario 2: ' || SQLERRM);
+END;
+/
+
+
+Output:
+
+--- Scenario 2: VIP Status Promotion ---
+--------------------------------------
+Checking Customer: David Lee, Balance: $12500
+David Lee has balance over $10,000. Promoted to VIP!
+Final VIP Status for David Lee: TRUE
+
+
+Checking Customer: Eve Adams, Balance: $8000
+Eve Adams has balance $10,000 or less. Remains regular.
+Final VIP Status for Eve Adams: FALSE
+--------------------------------------
+
+
+
+Scenario 3:Scenario 3: The bank wants to send reminders to customers whose loans are due within the next 30 days.
+Question: Write a PL/SQL block that fetches all loans due in the next 30 days and prints a reminder message for each customer.
+
+
+-- Scenario 3: The bank wants to send reminders to customers whose loans are due within the next 30 days.
+-- This block fetches (simulates) loans due in the next 30 days and prints a reminder message.
+
+-- To enable output in some online PL/SQL compilers, you might need to add:
+-- SET SERVEROUTPUT ON;
+
+DECLARE
+    -- Using the current date (June 26, 2025) for Kadur, Karnataka, India, for consistent testing
+    v_current_date        DATE := TO_DATE('26-JUN-2025', 'DD-MON-YYYY');
+
+    -- --- Example 1: Loan due within 30 days (Hannah Brown - Loan 1) ---
+    v_loan1_id            NUMBER        := 3001;
+    v_cust1_name          VARCHAR2(100) := 'Hannah Brown';
+    v_loan1_due_date      DATE          := v_current_date + 15; -- Due in 15 days
+
+    -- --- Example 2: Loan NOT due within 30 days (Ian King) ---
+    v_loan2_id            NUMBER        := 3002;
+    v_cust2_name          VARCHAR2(100) := 'Ian King';
+    v_loan2_due_date      DATE          := v_current_date + 50; -- Due in 50 days
+
+    -- --- Example 3: Another loan due within 30 days (Hannah Brown - Loan 2) ---
+    v_loan3_id            NUMBER        := 3003;
+    v_cust3_name          VARCHAR2(100) := 'Hannah Brown';
+    v_loan3_due_date      DATE          := v_current_date + 29; -- Due in 29 days
+
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('--- Scenario 3: Loan Reminders ---');
+    DBMS_OUTPUT.PUT_LINE('----------------------------------');
+    DBMS_OUTPUT.PUT_LINE('Simulated Current Date: ' || TO_CHAR(v_current_date, 'DD-MON-YYYY'));
+    DBMS_OUTPUT.PUT_LINE('Checking for loans due between ' || TO_CHAR(v_current_date, 'DD-MON-YYYY') || ' and ' || TO_CHAR(v_current_date + 30, 'DD-MON-YYYY'));
+    DBMS_OUTPUT.PUT_LINE('----------------------------------');
+
+    -- Processing Example 1: Hannah Brown - Loan 1
+    DBMS_OUTPUT.PUT_LINE('Loan ID: ' || v_loan1_id || ' for ' || v_cust1_name || ' (Due: ' || TO_CHAR(v_loan1_due_date, 'DD-MON-YYYY') || ')');
+    IF v_loan1_due_date >= v_current_date AND v_loan1_due_date <= (v_current_date + 30) THEN
+        DBMS_OUTPUT.PUT_LINE('  REMINDER: Dear ' || v_cust1_name || ',');
+        DBMS_OUTPUT.PUT_LINE('    Your loan (ID: ' || v_loan1_id || ') is due on ' || TO_CHAR(v_loan1_due_date, 'DD-MON-YYYY') || '.');
+        DBMS_OUTPUT.PUT_LINE('    Please ensure timely payment.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('  Not due within the next 30 days. No reminder sent.');
+    END IF;
+
+    DBMS_OUTPUT.PUT_LINE(CHR(10)); -- New line for separation
+
+    -- Processing Example 2: Ian King
+    DBMS_OUTPUT.PUT_LINE('Loan ID: ' || v_loan2_id || ' for ' || v_cust2_name || ' (Due: ' || TO_CHAR(v_loan2_due_date, 'DD-MON-YYYY') || ')');
+    IF v_loan2_due_date >= v_current_date AND v_loan2_due_date <= (v_current_date + 30) THEN
+        DBMS_OUTPUT.PUT_LINE('  REMINDER: Dear ' || v_cust2_name || ',');
+        DBMS_OUTPUT.PUT_LINE('    Your loan (ID: ' || v_loan2_id || ') is due on ' || TO_CHAR(v_loan2_due_date, 'DD-MON-YYYY') || '.');
+        DBMS_OUTPUT.PUT_LINE('    Please ensure timely payment.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('  Not due within the next 30 days. No reminder sent.');
+    END IF;
+
+    DBMS_OUTPUT.PUT_LINE(CHR(10)); -- New line for separation
+
+    -- Processing Example 3: Hannah Brown - Loan 2
+    DBMS_OUTPUT.PUT_LINE('Loan ID: ' || v_loan3_id || ' for ' || v_cust3_name || ' (Due: ' || TO_CHAR(v_loan3_due_date, 'DD-MON-YYYY') || ')');
+    IF v_loan3_due_date >= v_current_date AND v_loan3_due_date <= (v_current_date + 30) THEN
+        DBMS_OUTPUT.PUT_LINE('  REMINDER: Dear ' || v_cust3_name || ',');
+        DBMS_OUTPUT.PUT_LINE('    Your loan (ID: ' || v_loan3_id || ') is due on ' || TO_CHAR(v_loan3_due_date, 'DD-MON-YYYY') || '.');
+        DBMS_OUTPUT.PUT_LINE('    Please ensure timely payment.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('  Not due within the next 30 days. No reminder sent.');
+    END IF;
+
+    DBMS_OUTPUT.PUT_LINE('----------------------------------');
+
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An error occurred in Scenario 3: ' || SQLERRM);
+END;
+/
+
+
+Output:
+
+--- Scenario 3: Loan Reminders ---
+----------------------------------
+Simulated Current Date: 26-JUN-2025
+Checking for loans due between 26-JUN-2025 and 26-JUL-2025
+----------------------------------
+Loan ID: 3001 for Hannah Brown (Due: 11-JUL-2025)
+REMINDER: Dear Hannah Brown,
+Your loan (ID: 3001) is due on 11-JUL-2025.
+Please ensure timely payment.
+
+
+Loan ID: 3002 for Ian King (Due: 15-AUG-2025)
+Not due within the next 30 days. No reminder sent.
+
+
+Loan ID: 3003 for Hannah Brown (Due: 25-JUL-2025)
+REMINDER: Dear Hannah Brown,
+Your loan (ID: 3003) is due on 25-JUL-2025.
+Please ensure timely payment.
+----------------------------------
+
+
+
+
+
+
+
+
