@@ -157,3 +157,46 @@ class ExcelDocumentFactory extends DocumentFactory { // No 'public'
         return new ExcelDocument(name);
     }
 }
+
+OUTPUT:
+--- Testing Factory Method Pattern ---
+
+Creating Word Documents:
+Word Document 'MyReport.docx' created.
+Opening Word Document: MyReport.docx
+Saving Word Document: MyReport.docx
+Closing Word Document: MyReport.docx
+--------------------
+Word Document 'Minutes.docx' created.
+Opening Word Document: Minutes.docx
+Saving Word Document: Minutes.docx
+Closing Word Document: Minutes.docx
+Document processed: Minutes.docx
+
+Creating PDF Documents:
+PDF Document 'UserManual.pdf' created.
+Opening PDF Document: UserManual.pdf
+Saving PDF Document: UserManual.pdf
+Closing PDF Document: UserManual.pdf
+--------------------
+PDF Document 'Invoice.pdf' created.
+Opening PDF Document: Invoice.pdf
+Saving PDF Document: Invoice.pdf
+Closing PDF Document: Invoice.pdf
+Document processed: Invoice.pdf
+
+Creating Excel Documents:
+Excel Document 'SalesData.xlsx' created.
+Opening Excel Document: SalesData.xlsx
+Saving Excel Document: SalesData.xlsx
+Closing Excel Document: SalesData.xlsx
+--------------------
+Excel Document 'Budget.xlsx' created.
+Opening Excel Document: Budget.xlsx
+Saving Excel Document: Budget.xlsx
+Closing Excel Document: Budget.xlsx
+Document processed: Budget.xlsx
+
+--- Factory Method Pattern Test Complete ---
+
+=== Code Execution Successful ===
