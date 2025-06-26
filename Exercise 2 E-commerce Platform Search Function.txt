@@ -157,3 +157,23 @@ class Product { // No 'public' as it's not the main public class
                '}';
     }
 }
+
+OUTPUT:
+
+--- E-commerce Platform Search Function Test ---
+
+--- Testing Linear Search ---
+Linear Search: Found product: Keyboard (ID: P105)
+Time taken: 4640 ns
+Linear Search: Product with ID P999 not found.
+Time taken: 1920 ns
+
+--- Testing Binary Search ---
+Binary Search: Found product: T-Shirt (ID: P201)
+Time taken: 20800 ns
+Binary Search: Product with ID P102 not found.
+Time taken: 3500 ns
+
+--- Search Function Test Complete ---
+
+=== Code Execution Successful ===
