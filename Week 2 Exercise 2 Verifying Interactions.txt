@@ -1,0 +1,142 @@
+Exercise 2: Verifying Interactions 
+Scenario: 
+You need to ensure that a method is called with specific arguments.
+
+
+
+
+// Main.java (Renamed for easier execution in basic online compilers)
+
+// ExternalApi.java (Interface definition - now with a method taking an argument)
+interface ExternalApi {
+    String getData(); // Existing method
+    void sendData(String data); // New method to verify arguments
+}
+
+// MyService.java (Service class definition - now uses sendData)
+class MyService {
+    private final ExternalApi externalApi;
+
+    public MyService(ExternalApi externalApi) {
+        this.externalApi = externalApi;
+    }
+
+    public String fetchData() {
+        return externalApi.getData();
+    }
+
+    // New method that calls the external API with specific data
+    public void processData(String dataToSend) {
+        // Here, MyService decides to send some data to the external API
+        externalApi.sendData(dataToSend);
+    }
+}
+
+// Main class to run the simulation
+public class Main {
+
+    public static void main(String[] args) {
+        System.out.println("--- Starting Mocking Simulation ---");
+
+        // --- Exercise 1: Mocking and Stubbing (unchanged from previous) ---
+        System.out.println("\n--- Exercise 1: Mocking and Stubbing Simulation ---");
+
+        ExternalApi mockApiForStubbing = new ExternalApi() {
+            @Override
+            public String getData() {
+                return "Mock Data";
+            }
+            @Override
+            public void sendData(String data) {
+                // Not relevant for this exercise part, can do nothing
+            }
+        };
+
+        MyService serviceForStubbing = new MyService(mockApiForStubbing);
+        String resultStubbing = serviceForStubbing.fetchData();
+
+        System.out.println("Service fetched data (Stubbing): \"" + resultStubbing + "\"");
+        String expectedDataStubbing = "Mock Data";
+        if (resultStubbing.equals(expectedDataStubbing)) {
+            System.out.println("Assertion Passed: Result matches expected data!");
+        } else {
+            System.out.println("Assertion FAILED: Expected \"" + expectedDataStubbing + "\", but got \"" + resultStubbing + "\"");
+        }
+
+
+        // --- Exercise 2: Verifying Interactions with Specific Arguments ---
+        System.out.println("\n--- Exercise 2: Verifying Interactions Simulation (with arguments) ---");
+
+        // Step 1: Create a mock object that can track calls and arguments.
+        class VerifiableExternalApi implements ExternalApi {
+            private boolean sendDataWasCalled = false;
+            private String receivedDataArgument = null; // To store the argument
+
+            @Override
+            public String getData() {
+                // Not used in this verification exercise, but part of interface
+                return null;
+            }
+
+            @Override
+            public void sendData(String data) {
+                sendDataWasCalled = true; // Mark that this method was called
+                receivedDataArgument = data; // Store the argument it was called with
+                System.out.println("Mock: sendData() was called with argument: \"" + data + "\"");
+            }
+
+            // Custom methods for verification
+            public boolean wasSendDataCalled() {
+                return sendDataWasCalled;
+            }
+
+            public String getReceivedDataArgument() {
+                return receivedDataArgument;
+            }
+        }
+        
+        VerifiableExternalApi verifiableMockApi = new VerifiableExternalApi();
+
+        // Step 2: Call the method with specific arguments.
+        MyService serviceForVerification = new MyService(verifiableMockApi);
+        String dataToProcess = "Important Report Data"; // The specific argument we want to verify
+        serviceForVerification.processData(dataToProcess); // This call should trigger sendData()
+
+        // Step 3: Verify the interaction.
+        // Check our custom flags/fields to see if sendData() was indeed called
+        // and with the expected argument.
+        if (verifiableMockApi.wasSendDataCalled()) {
+            System.out.println("Verification Passed: ExternalApi.sendData() was called!");
+
+            String expectedArgument = "Important Report Data";
+            if (verifiableMockApi.getReceivedDataArgument() != null && 
+                verifiableMockApi.getReceivedDataArgument().equals(expectedArgument)) {
+                System.out.println("Verification Passed: It was called with the correct argument: \"" + expectedArgument + "\"");
+            } else {
+                System.out.println("Verification FAILED: It was called, but with incorrect argument. Expected: \"" + expectedArgument + "\", Actual: \"" + verifiableMockApi.getReceivedDataArgument() + "\"");
+            }
+
+        } else {
+            System.out.println("Verification FAILED: ExternalApi.sendData() was NOT called!");
+        }
+
+        System.out.println("\n--- Simulation Complete ---");
+    }
+}
+
+Output:
+
+--- Starting Mocking Simulation ---
+
+--- Exercise 1: Mocking and Stubbing Simulation ---
+Service fetched data (Stubbing): "Mock Data"
+Assertion Passed: Result matches expected data!
+
+--- Exercise 2: Verifying Interactions Simulation (with arguments) ---
+Mock: sendData() was called with argument: "Important Report Data"
+Verification Passed: ExternalApi.sendData() was called!
+Verification Passed: It was called with the correct argument: "Important Report Data"
+
+--- Simulation Complete ---
+
+=== Code Execution Successful ===
