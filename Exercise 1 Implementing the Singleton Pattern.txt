@@ -60,3 +60,24 @@ class Logger { // Removed 'public' to allow it to be a non-public top-level clas
         System.out.println("LOG: " + message);
     }
 }
+
+
+OUTPUT:
+--- Testing Singleton Logger ---
+Logger instance created.
+LOG: This is the first log message.
+LOG: This is the second log message.
+LOG: This is the third log message.
+
+Verifying instances:
+logger1 hashcode: 1735600054
+logger2 hashcode: 1735600054
+logger3 hashcode: 1735600054
+
+All logger instances are the same. Singleton pattern works!
+LOG: Another message from logger1.
+LOG: Yet another message from logger2.
+
+=== Code Execution Successful ===
+
+
