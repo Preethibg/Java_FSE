@@ -1,0 +1,191 @@
+Exercise 4: Creating and Configuring a Maven Project
+Scenario: 
+You need to set up a new Maven project for the library management application and add Spring dependencies.
+
+
+Step 1: Create a New Maven Project Directory Structure
+First, create the main project directory and its standard Maven subdirectories on your local machine.
+
+Create a folder named LibraryManagement.
+
+Inside LibraryManagement, create the following nested folders:
+
+src
+
+main
+
+java
+
+resources
+
+test
+
+java
+
+resources
+
+Your directory structure should look like this:
+
+LibraryManagement/
+├── pom.xml
+└── src/
+    ├── main/
+    │   ├── java/
+    │   └── resources/
+    └── test/
+        ├── java/
+        └── resources/
+Step 2: Add Spring Dependencies and Configure Maven Plugins in pom.xml
+Create a file named pom.xml directly inside your LibraryManagement folder and paste the following content into it. This pom.xml includes:
+
+Basic Maven project setup.
+
+Dependencies for Spring Context, Spring AOP, and Spring WebMVC (using a Spring 5.x version compatible with Java 1.8).
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.library</groupId>
+    <artifactId>LibraryManagement</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging> <!-- Or 'war' if it's a web application, but 'jar' is fine for now -->
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.version>5.3.27</spring.version> <!-- Compatible with Java 1.8 -->
+    </properties>
+
+    <dependencies>
+        <!-- Spring Context (includes Core, Beans, Expression) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- Spring AOP -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- Spring WebMVC (includes Spring Web) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- Standard Logging Dependency (e.g., SLF4J with Logback) -->
+        <!-- While not explicitly asked, good practice for Spring projects -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.11</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- JUnit for testing (good practice) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Configure Maven Compiler Plugin for Java 1.8 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+
+Step 3: Verify the Configuration
+Now, open your terminal or command prompt and navigate to your LibraryManagement project directory (where pom.xml is located).
+
+Navigate to your project's root directory:
+
+Bash
+
+cd path/to/your/LibraryManagement
+(Replace path/to/your/LibraryManagement with the actual path to your project.)
+
+Run a Maven build command:
+This command will download all the specified dependencies and compile any (currently non-existent) Java source files. It will confirm that Maven can parse your pom.xml and resolve the dependencies.
+
+Bash
+
+mvn clean install
+
+Output:
+The output will show Maven downloading various JAR files (Spring, SLF4J, Logback, JUnit, etc.) and then indicate a successful build.
+
+[INFO] Scanning for projects...
+[INFO]
+[INFO] -----------------< com.library:LibraryManagement >------------------
+[INFO] Building LibraryManagement 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ LibraryManagement ---
+[INFO] Deleting /path/to/your/LibraryManagement/target
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ LibraryManagement ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /path/to/your/LibraryManagement/src/main/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.8.1:compile (default-compile) @ LibraryManagement ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ LibraryManagement ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /path/to/your/LibraryManagement/src/test/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.8.1:testCompile (default-testCompile) @ LibraryManagement ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ LibraryManagement ---
+[INFO] No tests to run.
+[INFO]
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ LibraryManagement ---
+[INFO] Building jar: /path/to/your/LibraryManagement/target/LibraryManagement-1.0-SNAPSHOT.jar
+[INFO]
+[INFO] --- maven-install-plugin:2.4:install (default-install) @ LibraryManagement ---
+[INFO] Installing /path/to/your/LibraryManagement/target/LibraryManagement-1.0-SNAPSHOT.jar to /home/user/.m2/repository/com/library/LibraryManagement/1.0-SNAPSHOT/LibraryManagement-1.0-SNAPSHOT.jar
+[INFO] Installing /path/to/your/LibraryManagement/pom.xml to /home/user/.m2/repository/com/library/LibraryManagement/1.0-SNAPSHOT/LibraryManagement-1.0-SNAPSHOT.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 10.549 s (first run will be longer due to downloads)
+[INFO] Finished at: 2025-07-01T18:30:00+05:30
+[INFO] -
+
+This "BUILD SUCCESS" message confirms that your Maven project is correctly set up, the Spring dependencies are resolved, and the compiler plugin is configured for Java 1.8. You now have a foundational Maven project ready for further Spring development.
