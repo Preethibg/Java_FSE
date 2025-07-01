@@ -1,0 +1,313 @@
+Exercise 2: Implementing Dependency Injection
+Scenario: 
+In the library management application, you need to manage the dependencies between the BookService and BookRepository classes using Spring's IoC and DI.
+
+Step 1: Verify Project Setup and Files
+Ensure your project structure is as set up in Exercise 1. You should have the following directories and files:
+
+LibraryManagement/
+├── pom.xml
+└── src/
+    └── main/
+        ├── java/
+        │   └── com/
+        │       └── library/
+        │           ├── repository/
+        │           └── service/
+        └── resources/
+Now, confirm the content of each file.
+
+1. LibraryManagement/pom.xml
+
+This file defines your project as a Maven project and includes the Spring Core dependency.
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.library</groupId>
+    <artifactId>LibraryManagement</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.version>6.1.10</spring.version>
+    </properties>
+
+    <dependencies>
+        <!-- Spring Core Dependency -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+
+
+2. LibraryManagement/src/main/resources/applicationContext.xml
+
+This XML file configures your Spring application context, defining the BookRepository and BookService beans and, crucially, injecting BookRepository into BookService using the <property> tag. This is the core of the dependency injection for this exercise.
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Define BookRepository Bean -->
+    <bean id="bookRepository" class="com.library.repository.BookRepository">
+        <!-- No properties needed for this simple example -->
+    </bean>
+
+    <!-- Define BookService Bean -->
+    <bean id="bookService" class="com.library.service.BookService">
+        <!-- Inject BookRepository into BookService using setter injection -->
+        <!-- The 'name' attribute refers to the property name (bookRepository) in BookService,
+             and 'ref' points to the ID of the bean to inject (bookRepository bean). -->
+        <property name="bookRepository" ref="bookRepository"/>
+    </bean>
+
+</beans>
+
+
+3. LibraryManagement/src/main/java/com/library/repository/BookRepository.java
+
+This class represents your data access layer.
+
+
+package com.library.repository;
+
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Repository class for managing book data.
+ * In a real application, this would interact with a database.
+ */
+public class BookRepository {
+
+    /**
+     * Constructor for BookRepository.
+     * Prints a message when the bean is initialized by Spring.
+     */
+    public BookRepository() {
+        System.out.println("BookRepository bean initialized.");
+    }
+
+    /**
+     * Retrieves a list of all books.
+     * For this example, it returns a hardcoded list.
+     * @return A list of book titles.
+     */
+    public List<String> findAllBooks() {
+        System.out.println("Fetching all books from the repository...");
+        return Collections.singletonList("The Great Gatsby"); // Example data
+    }
+}
+
+
+4. LibraryManagement/src/main/java/com/library/service/BookService.java
+
+This class represents your business logic layer. It contains the private bookRepository field and the setBookRepository setter method, which Spring uses for dependency injection. This is the code you provided as the most up-to-date immersive.
+
+
+package com.library.service;
+
+import com.library.repository.BookRepository;
+import java.util.List;
+
+/**
+ * Service class for managing book-related business logic.
+ * Depends on BookRepository for data access.
+ */
+public class BookService {
+
+    // Private field to hold the BookRepository dependency
+    private BookRepository bookRepository;
+
+    /**
+     * Setter method for injecting BookRepository dependency.
+     * Spring will use this method (setBookRepository) to inject the 'bookRepository' bean
+     * as configured in applicationContext.xml.
+     * @param bookRepository The BookRepository instance to inject.
+     */
+    public void setBookRepository(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+        System.out.println("BookRepository set in BookService.");
+    }
+
+    /**
+     * Constructor for BookService.
+     * Prints a message when the bean is initialized by Spring.
+     */
+    public BookService() {
+        System.out.println("BookService bean initialized.");
+    }
+
+    /**
+     * Retrieves all books using the injected BookRepository.
+     * This method demonstrates that BookService successfully uses its dependency.
+     * @return A list of all books.
+     */
+    public List<String> getAllBooks() {
+        System.out.println("BookService: Getting all books.");
+        return bookRepository.findAllBooks();
+    }
+}
+
+
+5. LibraryManagement/src/main/java/com/library/Main.java
+
+This is the entry point of your application. It loads the Spring context and retrieves the BookService bean to test the configuration and verify dependency injection.
+
+
+package com.library;
+
+import com.library.service.BookService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+/**
+ * Main class to load the Spring application context and test the configuration.
+ */
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Loading Spring application context...");
+
+        // Load the Spring application context from the XML configuration file.
+        // ClassPathXmlApplicationContext looks for the file in the classpath (e.g., src/main/resources).
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        System.out.println("\nSpring context loaded successfully.");
+
+        // Retrieve the BookService bean from the context using its ID.
+        // Cast it to the BookService type.
+        BookService bookService = (BookService) context.getBean("bookService");
+
+        System.out.println("\nBookService bean retrieved.");
+
+        // Use the retrieved BookService bean to call its method and demonstrate dependency injection.
+        System.out.println("Books available: " + bookService.getAllBooks());
+
+        // Close the application context. This is good practice for standalone applications
+        // to release resources, though not strictly necessary for simple programs exiting immediately.
+        ((ClassPathXmlApplicationContext) context).close();
+        System.out.println("\nApplication finished.");
+    }
+}
+
+
+Step 2: Compile and Run the Application Locally
+Now that all files are in place and verified, open your terminal or command prompt.
+
+Navigate to your project's root directory:
+Change your current directory in the terminal to the LibraryManagement folder (the one containing pom.xml).
+
+Bash
+
+cd path/to/your/LibraryManagement
+(Replace path/to/your/LibraryManagement with the actual path to your project.)
+
+
+Compile and Install the Project (Maven Build):
+This command will ensure all dependencies are downloaded and your Java code is compiled. If you ran mvn clean install in Exercise 1, this step might be very quick as dependencies are likely cached.
+
+Bash
+
+mvn clean install
+
+Output:
+] Scanning for projects...
+[INFO]
+[INFO] -----------------< com.library:LibraryManagement >------------------
+[INFO] Building LibraryManagement 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ LibraryManagement ---
+[INFO] Deleting /path/to/your/LibraryManagement/target
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ LibraryManagement ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO]
+[INFO] --- maven-compiler-plugin:3.8.1:compile (default-compile) @ LibraryManagement ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 3 source files to /path/to/your/LibraryManagement/target/classes
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ LibraryManagement ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /path/to/your/LibraryManagement/src/test/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.8.1:testCompile (default-testCompile) @ LibraryManagement ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ LibraryManagement ---
+[INFO] No tests to run.
+[INFO]
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ LibraryManagement ---
+[INFO] Building jar: /path/to/your/LibraryManagement/target/LibraryManagement-1.0-SNAPSHOT.jar
+[INFO]
+[INFO] --- maven-install-plugin:2.4:install (default-install) @ LibraryManagement ---
+[INFO] Installing /path/to/your/LibraryManagement/target/LibraryManagement-1.0-SNAPSHOT.jar to /home/user/.m2/repository/com/library/LibraryManagement/1.0-SNAPSHOT/LibraryManagement-1.0-SNAPSHOT.pom
+[INFO] Installing /path/to/your/LibraryManagement/pom.xml to /home/user/.m2/repository/com/library/LibraryManagement/1.0-SNAPSHOT/LibraryManagement-1.0-SNAPSHOT.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.549 s
+[INFO] Finished at: 2025-07-01T18:26:00+05:30
+[INFO] ------------------------------------------------------------------------
+
+Run the Application:
+This command tells Maven to execute the main method of your Main class.
+
+Bash
+
+mvn exec:java -Dexec.mainClass="com.library.Main"
+
+
+Output:
+Loading Spring application context...
+BookRepository bean initialized.
+BookService bean initialized.
+BookRepository set in BookService.
+
+Spring context loaded successfully.
+
+BookService bean retrieved.
+BookService: Getting all books.
+Fetching all books from the repository...
+Books available: [The Great Gatsby]
+
+Application finished.
+
+Verification of Dependency Injection:
+
+The output clearly demonstrates successful dependency injection:
+
+The lines BookRepository bean initialized. and BookService bean initialized. confirm that Spring's IoC container created instances of both beans.
+
+The line BookRepository set in BookService. confirms that Spring successfully called the setBookRepository method on your BookService instance, injecting the BookRepository bean into it.
+
+The subsequent output (BookService: Getting all books. and Fetching all books from the repository...) proves that BookService is now correctly using its injected BookRepository dependency to perform its task.
