@@ -1,0 +1,204 @@
+// Main.java (Combined file for Factory Method Pattern)
+
+// --- Test Class ---
+public class Main { // This class serves as FactoryMethodTest for Programiz
+    public static void main(String[] args) {
+        System.out.println("--- Testing Factory Method Pattern ---");
+
+        // Create a Word document factory and use it
+        System.out.println("\nCreating Word Documents:");
+        DocumentFactory wordFactory = new WordDocumentFactory();
+        Document doc1 = wordFactory.createDocument("MyReport.docx");
+        doc1.open();
+        doc1.save();
+        doc1.close();
+        System.out.println("--------------------");
+
+        // Alternatively, use the processDocument method provided by the factory
+        wordFactory.processDocument("Minutes.docx");
+
+        // Create a PDF document factory and use it
+        System.out.println("Creating PDF Documents:");
+        DocumentFactory pdfFactory = new PdfDocumentFactory();
+        Document doc2 = pdfFactory.createDocument("UserManual.pdf");
+        doc2.open();
+        doc2.save();
+        doc2.close();
+        System.out.println("--------------------");
+
+        pdfFactory.processDocument("Invoice.pdf");
+
+        // Create an Excel document factory and use it
+        System.out.println("Creating Excel Documents:");
+        DocumentFactory excelFactory = new ExcelDocumentFactory();
+        Document doc3 = excelFactory.createDocument("SalesData.xlsx");
+        doc3.open();
+        doc3.save();
+        doc3.close();
+        System.out.println("--------------------");
+
+        excelFactory.processDocument("Budget.xlsx");
+
+        System.out.println("--- Factory Method Pattern Test Complete ---");
+    }
+}
+
+// --- Document Interface ---
+interface Document { // No 'public' here as it's not the main public class
+    void open();
+    void save();
+    void close();
+}
+
+// --- Concrete Document Classes ---
+class WordDocument implements Document { // No 'public'
+    private String name;
+
+    public WordDocument(String name) {
+        this.name = name;
+        System.out.println("Word Document '" + name + "' created.");
+    }
+
+    @Override
+    public void open() {
+        System.out.println("Opening Word Document: " + name);
+    }
+
+    @Override
+    public void save() {
+        System.out.println("Saving Word Document: " + name);
+    }
+
+    @Override
+    public void close() {
+        System.out.println("Closing Word Document: " + name);
+    }
+}
+
+class PdfDocument implements Document { // No 'public'
+    private String name;
+
+    public PdfDocument(String name) {
+        this.name = name;
+        System.out.println("PDF Document '" + name + "' created.");
+    }
+
+    @Override
+    public void open() {
+        System.out.println("Opening PDF Document: " + name);
+    }
+
+    @Override
+    public void save() {
+        System.out.println("Saving PDF Document: " + name);
+    }
+
+    @Override
+    public void close() {
+        System.out.println("Closing PDF Document: " + name);
+    }
+}
+
+class ExcelDocument implements Document { // No 'public'
+    private String name;
+
+    public ExcelDocument(String name) {
+        this.name = name;
+        System.out.println("Excel Document '" + name + "' created.");
+    }
+
+    @Override
+    public void open() {
+        System.out.println("Opening Excel Document: " + name);
+    }
+
+    @Override
+    public void save() {
+        System.out.println("Saving Excel Document: " + name);
+    }
+
+    @Override
+    public void close() {
+        System.out.println("Closing Excel Document: " + name);
+    }
+}
+
+// --- Abstract Document Factory ---
+abstract class DocumentFactory { // No 'public'
+    public abstract Document createDocument(String name);
+
+    public void processDocument(String name) {
+        Document doc = createDocument(name); // Use the factory method
+        doc.open();
+        doc.save();
+        doc.close();
+        System.out.println("Document processed: " + name + "\n");
+    }
+}
+
+// --- Concrete Document Factories ---
+class WordDocumentFactory extends DocumentFactory { // No 'public'
+    @Override
+    public Document createDocument(String name) {
+        return new WordDocument(name);
+    }
+}
+
+class PdfDocumentFactory extends DocumentFactory { // No 'public'
+    @Override
+    public Document createDocument(String name) {
+        return new PdfDocument(name);
+    }
+}
+
+class ExcelDocumentFactory extends DocumentFactory { // No 'public'
+    @Override
+    public Document createDocument(String name) {
+        return new ExcelDocument(name);
+    }
+}
+
+
+
+OUTPUT:
+--- Testing Factory Method Pattern ---
+
+Creating Word Documents:
+Word Document 'MyReport.docx' created.
+Opening Word Document: MyReport.docx
+Saving Word Document: MyReport.docx
+Closing Word Document: MyReport.docx
+--------------------
+Word Document 'Minutes.docx' created.
+Opening Word Document: Minutes.docx
+Saving Word Document: Minutes.docx
+Closing Word Document: Minutes.docx
+Document processed: Minutes.docx
+
+Creating PDF Documents:
+PDF Document 'UserManual.pdf' created.
+Opening PDF Document: UserManual.pdf
+Saving PDF Document: UserManual.pdf
+Closing PDF Document: UserManual.pdf
+--------------------
+PDF Document 'Invoice.pdf' created.
+Opening PDF Document: Invoice.pdf
+Saving PDF Document: Invoice.pdf
+Closing PDF Document: Invoice.pdf
+Document processed: Invoice.pdf
+
+Creating Excel Documents:
+Excel Document 'SalesData.xlsx' created.
+Opening Excel Document: SalesData.xlsx
+Saving Excel Document: SalesData.xlsx
+Closing Excel Document: SalesData.xlsx
+--------------------
+Excel Document 'Budget.xlsx' created.
+Opening Excel Document: Budget.xlsx
+Saving Excel Document: Budget.xlsx
+Closing Excel Document: Budget.xlsx
+Document processed: Budget.xlsx
+
+--- Factory Method Pattern Test Complete ---
+
+=== Code Execution Successful ===

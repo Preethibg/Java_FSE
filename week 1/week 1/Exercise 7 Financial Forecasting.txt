@@ -1,0 +1,86 @@
+// Main.java (Combined file for Financial Forecasting)
+
+public class Main {
+
+    public static void main(String[] args) {
+        System.out.println("--- Financial Forecasting Tool ---");
+
+        double initialInvestment = 1000.0; // Present Value
+        double annualGrowthRate = 0.05;    // 5%
+        int numberOfPeriods = 10;          // 10 years
+
+        System.out.println("\nCalculating Future Value Recursively:");
+        System.out.println("Initial Investment: " + initialInvestment);
+        System.out.println("Annual Growth Rate: " + (annualGrowthRate * 100) + "%");
+        System.out.println("Number of Periods: " + numberOfPeriods);
+
+        // Recursive Calculation
+        long startTimeRecursive = System.nanoTime();
+        double futureValueRecursive = calculateFutureValueRecursive(initialInvestment, annualGrowthRate, numberOfPeriods);
+        long endTimeRecursive = System.nanoTime();
+        System.out.printf("Future Value (Recursive): %.2f%n", futureValueRecursive);
+        System.out.println("Time taken (Recursive): " + (endTimeRecursive - startTimeRecursive) + " ns");
+
+        // Iterative Optimization (for comparison and demonstration of best practice)
+        System.out.println("\nCalculating Future Value Iteratively (Optimized):");
+        long startTimeIterative = System.nanoTime();
+        double futureValueIterative = calculateFutureValueIterative(initialInvestment, annualGrowthRate, numberOfPeriods);
+        long endTimeIterative = System.nanoTime();
+        System.out.printf("Future Value (Iterative): %.2f%n", futureValueIterative);
+        System.out.println("Time taken (Iterative): " + (endTimeIterative - startTimeIterative) + " ns");
+
+
+        System.out.println("\n--- Forecasting Complete ---");
+    }
+
+    /**
+     * Recursive algorithm to predict future values based on past growth rates.
+     * Assumes a constant growth rate over the periods.
+     * Time Complexity: O(periods)
+     * Space Complexity: O(periods) due to call stack.
+     */
+    public static double calculateFutureValueRecursive(double presentValue, double growthRate, int periods) {
+        // Base Case: If no more periods, return the current present value
+        if (periods == 0) {
+            return presentValue;
+        }
+        // Recursive Step: Calculate value for current period and call for next period
+        return calculateFutureValueRecursive(presentValue * (1 + growthRate), growthRate, periods - 1);
+        // Alternative recursive step (closer to mathematical definition):
+        // return calculateFutureValueRecursive(presentValue, growthRate, periods - 1) * (1 + growthRate);
+    }
+
+    /**
+     * Optimized iterative algorithm for future value calculation.
+     * More efficient for large 'periods' due to no function call overhead and no stack build-up.
+     * Time Complexity: O(periods)
+     * Space Complexity: O(1)
+     */
+    public static double calculateFutureValueIterative(double presentValue, double growthRate, int periods) {
+        double futureValue = presentValue;
+        for (int i = 0; i < periods; i++) {
+            futureValue *= (1 + growthRate);
+        }
+        return futureValue;
+    }
+}
+
+
+OUTPUT:
+
+--- Financial Forecasting Tool ---
+
+Calculating Future Value Recursively:
+Initial Investment: 1000.0
+Annual Growth Rate: 5.0%
+Number of Periods: 10
+Future Value (Recursive): 1628.89
+Time taken (Recursive): 49910 ns
+
+Calculating Future Value Iteratively (Optimized):
+Future Value (Iterative): 1628.89
+Time taken (Iterative): 5470 ns
+
+--- Forecasting Complete ---
+
+=== Code Execution Successful ===

@@ -1,0 +1,68 @@
+JDoodle Steps & Reasons:
+
+Why JDoodle: Used for quick, browser-based JUnit testing without needing a full local setup.
+
+How I Used It:
+
+1.Added JUnit Dependency:Told JDoodle to include the JUnit library (`junit:junit:4.13.2`) because online compilers don't automatically know about external tools like JUnit.
+2.Typed Test Code:**
+    Removed `package` (for simpler online execution).
+    Added a `main` method with `JUnitCore.runClasses(YourTestClass.class)` to instruct JDoodle how to programmatically run your JUnit tests. Online compilers need an explicit entry point to start.
+3.Executed & Verified: Ran the code and confirmed the "Success: YES" output, proving JUnit executed correctly.
+
+
+Exercise 1: Setting Up JUnit 
+Scenario: You need to set up JUnit in your Java project to start writing unit tests.
+
+
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import org.junit.runner.JUnitCore; // <-- NEW: Import this line
+import org.junit.runner.Result;     // <-- NEW: Import this line
+import org.junit.runner.notification.Failure; // <-- NEW: Import this line
+
+public class MyFirstJUnitTest {
+
+    @Test
+    public void additionTest() {
+        int num1 = 5;
+        int num2 = 3;
+        int sum = num1 + num2;
+        assertEquals(8, sum); // Assert that 5 + 3 equals 8
+    }
+
+    @Test
+    public void anotherTest() {
+        String message = "Hello JUnit!";
+        assertEquals("Hello JUnit!", message);
+    }
+
+    // <-- NEW: Add this entire main method below your test methods -->
+    public static void main(String[] args) {
+        // This line tells JUnit to run all tests in MyFirstJUnitTest.class
+        Result result = JUnitCore.runClasses(MyFirstJUnitTest.class);
+
+        // Print out any failures (if tests failed)
+        for (Failure failure : result.getFailures()) {
+            System.out.println(failure.toString());
+        }
+
+        // Print a summary of the test run
+        System.out.println("--------------------");
+        System.out.println("Tests Run: " + result.getRunCount());
+        System.out.println("Failures: " + result.getFailureCount());
+        System.out.println("Ignored: " + result.getIgnoreCount());
+        System.out.println("Success: " + (result.wasSuccessful() ? "YES" : "NO"));
+    }
+    // <-- END NEW CODE -->
+}
+
+
+
+
+Output:
+--------------------
+Tests Run: 2
+Failures: 0
+Ignored: 0
+Success: YES

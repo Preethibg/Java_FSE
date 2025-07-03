@@ -1,0 +1,83 @@
+// Main.java (Combined file for - Single File Execution)
+
+public class Main { // This class now acts as your SingletonTest
+    public static void main(String[] args) {
+        System.out.println("--- Testing Singleton Logger ---");
+
+        // Get the first instance of Logger
+        Logger logger1 = Logger.getInstance();
+        logger1.log("This is the first log message.");
+
+        // Get another instance of Logger
+        Logger logger2 = Logger.getInstance();
+        logger2.log("This is the second log message.");
+
+        // Get a third instance of Logger
+        Logger logger3 = Logger.getInstance();
+        logger3.log("This is the third log message.");
+
+        // Verify that all references point to the same instance
+        System.out.println("\nVerifying instances:");
+        System.out.println("logger1 hashcode: " + logger1.hashCode());
+        System.out.println("logger2 hashcode: " + logger2.hashCode());
+        System.out.println("logger3 hashcode: " + logger3.hashCode()); 
+
+        // Check if logger1, logger2, and logger3 are the same object
+        if (logger1 == logger2 && logger2 == logger3) {
+            System.out.println("\nAll logger instances are the same. Singleton pattern works!");
+        } else {
+            System.out.println("\nSomething went wrong. Multiple logger instances created.");
+        }
+
+        // Demonstrate further logging with the same instance
+        logger1.log("Another message from logger1.");
+        logger2.log("Yet another message from logger2.");
+    }
+}
+
+// The Logger class definition is now in the same file
+class Logger { // Removed 'public' to allow it to be a non-public top-level class in the same file
+    // Private static instance of the Logger class
+    private static Logger instance;
+
+    // Private constructor to prevent direct instantiation
+    private Logger() {
+        // Optional: Initialize logging resources here
+        System.out.println("Logger instance created.");
+    }
+
+    // Public static method to get the instance of the Logger class
+    public static Logger getInstance() {
+        // Lazy initialization: create the instance only if it doesn't exist
+        if (instance == null) {
+            instance = new Logger();
+        }
+        return instance;
+    }
+
+    // Method to log messages
+    public void log(String message) {
+        System.out.println("LOG: " + message);
+    }
+}
+
+
+
+
+OUTPUT:
+--- Testing Singleton Logger ---
+Logger instance created.
+LOG: This is the first log message.
+LOG: This is the second log message.
+LOG: This is the third log message.
+
+Verifying instances:
+logger1 hashcode: 1735600054
+logger2 hashcode: 1735600054
+logger3 hashcode: 1735600054
+
+All logger instances are the same. Singleton pattern works!
+LOG: Another message from logger1.
+LOG: Yet another message from logger2.
+
+=== Code Execution Successful ===
