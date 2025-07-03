@@ -1,0 +1,172 @@
+Exercise 4: Arrange-Act-Assert (AAA) Pattern, Test Fixtures, Setup and 
+Teardown Methods in JUnit 
+
+Scenario: 
+You need to organize your tests using the Arrange-Act-Assert (AAA) pattern and use setup 
+and teardown methods.
+
+
+// Imports for JUnit (must be at the very top of the file)
+import org.junit.Before;
+import org.junit.After;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+
+// Imports for JUnitCore to run in online compilers like JDoodle
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
+
+// --- Calculator.java (The class to be tested) ---
+// In a real project, this would typically be in src/main/java
+// For JDoodle, it will be part of the same file as the test,
+// so we'll put it in the same file for simplicity.
+
+class Calculator {
+    /**
+     * Adds two integers and returns the sum.
+     * @param a The first integer.
+     * @param b The second integer.
+     * @return The sum of a and b.
+     */
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    /**
+     * Subtracts the second integer from the first.
+     * @param a The first integer.
+     * @param b The second integer.
+     * @return The result of a minus b.
+     */
+    public int subtract(int a, int b) {
+        return a - b;
+    }
+}
+
+// --- CalculatorTest.java (The test class) ---
+// This class demonstrates the Arrange-Act-Assert pattern
+// and the use of @Before and @After for setup and teardown.
+
+public class CalculatorTest {
+
+    // Declare the object that will be part of our test fixture
+    // We'll initialize this in the @Before method.
+    private Calculator calculator;
+
+    /**
+     * Setup method: This method runs BEFORE EACH test method.
+     * It's used to initialize common test fixtures, ensuring each test
+     * starts with a clean and consistent state.
+     */
+    @Before
+    public void setUp() {
+        // Arrange: Initialize a new Calculator instance for each test
+        calculator = new Calculator();
+        System.out.println("Setup: Calculator instance created.");
+        // We could also set up other resources here, like connecting to a mock database, etc.
+    }
+
+    /**
+     * Teardown method: This method runs AFTER EACH test method,
+     * regardless of whether the test passed or failed.
+     * It's used for cleaning up resources, if necessary.
+     */
+    @After
+    public void tearDown() {
+        // Arrange: Clean up resources if necessary.
+        // For a simple Calculator, there's not much to clean,
+        // but this demonstrates the method's execution.
+        calculator = null; // Dereference to aid garbage collection
+        System.out.println("Teardown: Calculator instance cleared.");
+    }
+
+    /**
+     * Test method demonstrating the AAA pattern for addition.
+     */
+    @Test
+    public void testAddMethod() {
+        System.out.println("--- Running testAddMethod ---");
+
+        // Arrange: Prepare test data (already done in @Before for calculator instance)
+        // Specific data for this test
+        int numberA = 10;
+        int numberB = 5;
+        int expectedSum = 15;
+
+        // Act: Execute the method under test
+        int actualSum = calculator.add(numberA, numberB);
+
+        // Assert: Verify the outcome
+        assertEquals("The addition result should be correct", expectedSum, actualSum);
+        assertNotNull("Calculator should not be null", calculator); // Just to show another assertion
+        assertTrue("Sum should be greater than numberA", actualSum > numberA); // Another assertion
+        System.out.println("Add method test passed.");
+    }
+
+    /**
+     * Test method demonstrating the AAA pattern for subtraction.
+     */
+    @Test
+    public void testSubtractMethod() {
+        System.out.println("--- Running testSubtractMethod ---");
+
+        // Arrange: Prepare test data (calculator initialized in @Before)
+        int numberX = 20;
+        int numberY = 7;
+        int expectedDifference = 13;
+
+        // Act: Execute the method under test
+        int actualDifference = calculator.subtract(numberX, numberY);
+
+        // Assert: Verify the outcome
+        assertEquals("The subtraction result should be correct", expectedDifference, actualDifference);
+        System.out.println("Subtract method test passed.");
+    }
+
+    // Main method for running JUnit tests in online compilers like JDoodle
+    // This allows the online environment to find and execute your tests.
+    public static void main(String[] args) {
+        System.out.println("Starting JUnit Test Execution...");
+        Result result = JUnitCore.runClasses(CalculatorTest.class);
+
+        // Report failures
+        for (Failure failure : result.getFailures()) {
+            System.err.println(failure.toString()); // Use System.err for errors
+        }
+
+        // Report summary
+        System.out.println("\n-------------------------------------");
+        System.out.println("JUnit Test Run Summary:");
+        System.out.println("Total Tests Run: " + result.getRunCount());
+        System.out.println("Tests Failed: " + result.getFailureCount());
+        System.out.println("Tests Ignored: " + result.getIgnoreCount());
+        System.out.println("All Tests Successful: " + result.wasSuccessful());
+        System.out.println("-------------------------------------");
+    }
+}
+
+
+Output:
+
+Starting JUnit Test Execution...
+Setup: Calculator instance created.
+--- Running testAddMethod ---
+Add method test passed.
+Teardown: Calculator instance cleared.
+Setup: Calculator instance created.
+--- Running testSubtractMethod ---
+Subtract method test passed.
+Teardown: Calculator instance cleared.
+
+-------------------------------------
+JUnit Test Run Summary:
+Total Tests Run: 2
+Tests Failed: 0
+Tests Ignored: 0
+All Tests Successful: true
+-------------------------------------
