@@ -1,0 +1,94 @@
+Week 3 - Hands-on 1  
+Spring Data JPA - Quick Example  
+
+✔️ Objective:  
+Demonstrating Spring Data JPA with MySQL to perform basic database operations using Hibernate ORM.
+
+✔️ Tools Used:  
+- MySQL Server 8.0  
+- MySQL Workbench  
+- Eclipse IDE for Enterprise Java Developers  
+- Maven 3.6.2  
+
+✔️ Steps Followed:  
+
+1. Created Spring Boot project using Spring Initializr  
+2. Group: com.cognizant  
+3. Artifact: orm-learn  
+4. Added dependencies: Spring Data JPA, MySQL Driver, DevTools  
+
+✔️ Database Setup:  
+- Created schema `ormlearn` in MySQL  
+- Created table `country`  
+```sql
+create table country (
+    co_code varchar(2) primary key,
+    co_name varchar(50)
+);
+insert into country values ('IN', 'India');
+insert into country values ('US', 'United States of America');
+
+Application Properties:
+spring.datasource.url=jdbc:mysql://localhost:3306/ormlearn  
+spring.datasource.username=root  
+spring.datasource.password=root  
+spring.jpa.hibernate.ddl-auto=validate  
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect  
+
+✔️ Entity Class - Country.java:
+
+java
+
+Copy
+Edit
+@Entity  
+@Table(name = "country")  
+public class Country {  
+    @Id  
+    @Column(name = "co_code")  
+    private String code;  
+
+    @Column(name = "co_name")  
+    private String name;  
+}
+
+✔️ Repository - CountryRepository:
+
+java
+Copy
+Edit
+public interface CountryRepository extends JpaRepository<Country, String> {}  
+✔️ Service - CountryService:
+
+java
+Copy
+Edit
+@Service  
+public class CountryService {  
+    @Autowired  
+    private CountryRepository countryRepository;  
+
+    @Transactional  
+    public List<Country> getAllCountries() {  
+        return countryRepository.findAll();  
+    }  
+}
+✔️ Main Class Testing:
+
+java
+Copy
+Edit
+public static void main(String[] args) {  
+    ApplicationContext context = SpringApplication.run(OrmLearnApplication.class, args);  
+    CountryService service = context.getBean(CountryService.class);  
+    List<Country> countries = service.getAllCountries();  
+    System.out.println(countries);  
+}
+
+✔️ Sample Output:
+css
+Copy
+Edit
+[Country [code=IN, name=India], Country [code=US, name=United States of America]]  
+✔️ Conclusion:
+Successfully retrieved data using Spring Data JPA with MySQL.
